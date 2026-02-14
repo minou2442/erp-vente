@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { FormEvent, useEffect, useState } from "react";
 import CameraScanner from "../../../components/barcode-scanner/camera-scanner";
@@ -65,58 +65,93 @@ export default function CreateProductPage() {
   }
 
   return (
-    <section className="panel">
-      <h2 className="page-title">{dictionary.products.create}</h2>
-
-      <div style={{ display: "grid", gap: 8, marginBottom: 12 }}>
-        <label>
-          Barcode / QR Data
-          <input value={barcode} onChange={(event) => setBarcode(event.target.value)} placeholder="Auto-generated if empty" />
-        </label>
-        <CameraScanner
-          onDetected={(value) => {
-            setBarcode(value);
-            setStatus(`Scanner value captured: ${value}`);
-          }}
-          buttonLabel="Scan Barcode / QR with Camera"
-        />
-        <UsbScanner
-          onDetected={(value) => {
-            setBarcode(value);
-            setStatus(`USB scanner value captured: ${value}`);
-          }}
-        />
+    <section className="page-section">
+      <div className="section-header">
+        <h2 className="page-title">{dictionary.products.create}</h2>
       </div>
 
-      <form onSubmit={onSubmit} style={{ display: "grid", gap: 10, maxWidth: 640 }}>
-        <input name="nameAr" placeholder="Name (AR)" required />
-        <input name="nameFr" placeholder="Name (FR)" />
-        <input name="nameEn" placeholder="Name (EN)" />
-        <input name="purchasePrice" placeholder="Purchase Price" type="number" min="0" step="0.01" required />
-        <input name="salePrice" placeholder="Sale Price" type="number" min="0" step="0.01" required />
-        <input name="stockQty" placeholder="Stock Qty" type="number" min="0" step="1" required />
-        <input name="minStockQty" placeholder="Min Stock Qty" type="number" min="0" step="1" required />
+      <div className="panel">
+        <h3 style={{ marginTop: 0, marginBottom: '20px', fontSize: '1.1rem', fontWeight: '600', color: 'var(--fg)' }}>Barcode / QR Scanner</h3>
+        <div style={{ display: "grid", gap: 12, marginBottom: 24, padding: '16px', background: 'rgba(59, 130, 246, 0.03)', borderRadius: '12px', border: '1px solid var(--line)' }}>
+          <label style={{ display: 'grid', gap: '6px' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Barcode / QR Data</span>
+            <input value={barcode} onChange={(event) => setBarcode(event.target.value)} placeholder="Auto-generated if empty" />
+          </label>
+          <CameraScanner
+            onDetected={(value) => {
+              setBarcode(value);
+              setStatus(`Scanner value captured: ${value}`);
+            }}
+            buttonLabel="Scan Barcode / QR with Camera"
+          />
+          <UsbScanner
+            onDetected={(value) => {
+              setBarcode(value);
+              setStatus(`USB scanner value captured: ${value}`);
+            }}
+          />
+        </div>
 
-        {categories.length > 0 ? (
-          <select name="categoryId" required defaultValue="">
-            <option disabled value="">
-              Select category
-            </option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.nameAr} / {category.nameFr}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <input name="categoryId" placeholder="Category UUID" required />
-        )}
+        <h3 style={{ marginTop: 0, marginBottom: '20px', fontSize: '1.1rem', fontWeight: '600', color: 'var(--fg)' }}>Product Details</h3>
+        <form onSubmit={onSubmit} style={{ display: "grid", gap: 14, maxWidth: '100%' }}>
+          <div className="form-grid-3">
+            <label style={{ display: 'grid', gap: '6px' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Name (Arabic)</span>
+              <input name="nameAr" placeholder="Arabic name" required />
+            </label>
+            <label style={{ display: 'grid', gap: '6px' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Name (French)</span>
+              <input name="nameFr" placeholder="French name" />
+            </label>
+            <label style={{ display: 'grid', gap: '6px' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Name (English)</span>
+              <input name="nameEn" placeholder="English name" />
+            </label>
+          </div>
 
-        <button className="primary-btn" type="submit">
-          {dictionary.common.save}
-        </button>
-      </form>
-      {status ? <p>{status}</p> : null}
+          <div className="form-grid-4">
+            <label style={{ display: 'grid', gap: '6px' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Purchase Price</span>
+              <input name="purchasePrice" placeholder="0.00" type="number" min="0" step="0.01" required />
+            </label>
+            <label style={{ display: 'grid', gap: '6px' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Sale Price</span>
+              <input name="salePrice" placeholder="0.00" type="number" min="0" step="0.01" required />
+            </label>
+            <label style={{ display: 'grid', gap: '6px' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Stock</span>
+              <input name="stockQty" placeholder="0" type="number" min="0" step="1" required />
+            </label>
+            <label style={{ display: 'grid', gap: '6px' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Min Stock</span>
+              <input name="minStockQty" placeholder="0" type="number" min="0" step="1" required />
+            </label>
+          </div>
+
+          <label style={{ display: 'grid', gap: '6px' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Category</span>
+            {categories.length > 0 ? (
+              <select name="categoryId" required defaultValue="" style={{ padding: '12px 14px', border: '1.5px solid var(--line)', borderRadius: '12px', background: 'var(--bg-soft)', color: 'var(--fg)', fontSize: '0.95rem', transition: 'all 0.3s ease', cursor: 'pointer' }}>
+                <option disabled value="">
+                  Select category
+                </option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.nameAr} / {category.nameFr}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input name="categoryId" placeholder="Category UUID" required />
+            )}
+          </label>
+
+          <button className="primary-btn" type="submit" style={{ marginTop: '8px' }}>
+            {dictionary.common.save}
+          </button>
+        </form>
+        {status ? <p style={{ color: status.includes('created') ? 'var(--success)' : 'var(--error)', marginTop: '16px', fontWeight: '500' }}>{status}</p> : null}
+      </div>
     </section>
   );
 }

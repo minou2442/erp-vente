@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -74,49 +74,98 @@ export default function LoginPage() {
 
   return (
     <section className="auth-card">
-      <h1>TREXBYTE ERP</h1>
-      <p>Multi-tenant alimentation management platform</p>
+      <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+        <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: '900', background: 'linear-gradient(135deg, var(--primary), var(--accent))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', letterSpacing: '-0.01em' }}>
+          TREXBYTE
+        </h1>
+        <p style={{ margin: '8px 0 0', color: 'var(--fg-muted)', fontSize: '0.95rem' }}>Multi-tenant ERP management platform</p>
+      </div>
 
-      <div className="auth-tabs">
-        <button className={mode === "login" ? "primary-btn" : "ghost-btn"} onClick={() => setMode("login")} type="button">
-          Login
+      <div className="auth-tabs" style={{ marginBottom: '28px' }}>
+        <button 
+          className={mode === "login" ? "primary-btn" : "ghost-btn"} 
+          onClick={() => setMode("login")} 
+          type="button"
+          style={{ flex: 1 }}
+        >
+          Sign In
         </button>
         <button
           className={mode === "registerOrg" ? "primary-btn" : "ghost-btn"}
           onClick={() => setMode("registerOrg")}
           type="button"
+          style={{ flex: 1 }}
         >
-          Register Alimentation
+          Register
         </button>
       </div>
 
       {mode === "login" ? (
         <form className="auth-form" onSubmit={login}>
-          <input name="email" type="email" placeholder="Email" required />
-          <input name="password" type="password" placeholder="Password" required />
-          <button className="primary-btn" type="submit">
+          <label style={{ display: 'grid', gap: '6px' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Email</span>
+            <input name="email" type="email" placeholder="your@email.com" required />
+          </label>
+          <label style={{ display: 'grid', gap: '6px' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Password</span>
+            <input name="password" type="password" placeholder="••••••••" required />
+          </label>
+          <button className="primary-btn" type="submit" style={{ width: '100%', marginTop: '8px' }}>
             Sign In
           </button>
         </form>
       ) : (
         <form className="auth-form" onSubmit={registerOrganization}>
-          <input name="organizationName" placeholder="Alimentation Name" required />
-          <input name="organizationCode" placeholder="Unique Code (e.g. my-store)" required />
-          <input name="address" placeholder="Address" />
-          <input name="city" placeholder="City" />
-          <input name="phone" placeholder="Phone" />
-          <input name="organizationEmail" type="email" placeholder="Organization Email" />
-          <input name="logoUrl" placeholder="Logo URL or base64 data URL" />
-          <input name="adminFullName" placeholder="Admin Full Name" required />
-          <input name="adminEmail" type="email" placeholder="Admin Email" required />
-          <input name="adminPassword" type="password" placeholder="Admin Password" required />
-          <button className="primary-btn" type="submit">
+          <h3 style={{ margin: '0 0 16px', fontSize: '1.1rem', fontWeight: '600', color: 'var(--fg)' }}>Organization Details</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <label style={{ display: 'grid', gap: '6px' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Organization Name</span>
+              <input name="organizationName" placeholder="Your Store Name" required />
+            </label>
+            <label style={{ display: 'grid', gap: '6px' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Unique Code</span>
+              <input name="organizationCode" placeholder="my-store" required />
+            </label>
+          </div>
+          <label style={{ display: 'grid', gap: '6px' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Address</span>
+            <input name="address" placeholder="Street address" />
+          </label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <label style={{ display: 'grid', gap: '6px' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>City</span>
+              <input name="city" placeholder="City" />
+            </label>
+            <label style={{ display: 'grid', gap: '6px' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Phone</span>
+              <input name="phone" placeholder="+1 (555) 000-0000" />
+            </label>
+          </div>
+          <label style={{ display: 'grid', gap: '6px' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Organization Email</span>
+            <input name="organizationEmail" type="email" placeholder="org@example.com" />
+          </label>
+          
+          <h3 style={{ margin: '20px 0 16px', fontSize: '1.1rem', fontWeight: '600', color: 'var(--fg)' }}>Admin Account</h3>
+          <label style={{ display: 'grid', gap: '6px' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Full Name</span>
+            <input name="adminFullName" placeholder="John Doe" required />
+          </label>
+          <label style={{ display: 'grid', gap: '6px' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Admin Email</span>
+            <input name="adminEmail" type="email" placeholder="admin@example.com" required />
+          </label>
+          <label style={{ display: 'grid', gap: '6px' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Password</span>
+            <input name="adminPassword" type="password" placeholder="••••••••" required />
+          </label>
+          <button className="primary-btn" type="submit" style={{ width: '100%', marginTop: '12px' }}>
             Create Organization
           </button>
         </form>
       )}
 
-      {status ? <p className="auth-status">{status}</p> : null}
+      {status ? <p className="auth-status" style={{ marginTop: '16px', padding: '12px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px', color: 'var(--error)', fontWeight: '500', fontSize: '0.9rem' }}>{status}</p> : null}
     </section>
   );
 }

@@ -196,129 +196,158 @@ export default function SalesPage() {
   const cartTotal = cart.reduce((sum, line) => sum + line.quantity * line.unitPrice, 0);
 
   return (
-    <section className="panel">
-      <h2 className="page-title">Sales</h2>
+    <section className="page-section">
+      <div className="section-header">
+        <h2 className="page-title">Sales & Point of Sale</h2>
+      </div>
 
-      <div className="sales-tools">
-        <h3 style={{ margin: 0 }}>Scan Barcode / QR</h3>
+      <div className="panel">
+        <h3 style={{ margin: 0, marginBottom: '16px', fontSize: '1.1rem', fontWeight: '600', color: 'var(--fg)' }}>Scan Barcode / QR</h3>
         <div className="form-grid form-grid-2">
-          <CameraScanner onDetected={(value) => void onScan(value)} buttonLabel="Scan with Camera (Barcode / QR)" />
+          <CameraScanner onDetected={(value) => void onScan(value)} buttonLabel="Scan with Camera" />
           <UsbScanner onDetected={(value) => void onScan(value)} />
         </div>
       </div>
 
-      <form onSubmit={addFromSelect} className="form-grid form-grid-4" style={{ marginTop: 12 }}>
-        <select name="productId" required defaultValue="">
-          <option value="" disabled>
-            Select product
-          </option>
-          {products.map((product) => (
-            <option key={product.id} value={product.id}>
-              {product.sku} - {product.nameAr}
-            </option>
-          ))}
-        </select>
-        <input name="quantity" type="number" placeholder="Qty" min={1} defaultValue={1} required />
-        <button className="ghost-btn" type="submit">
-          Add Line
-        </button>
-      </form>
-
-      <div className="table-wrap" style={{ marginTop: 12 }}>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Barcode</th>
-              <th>Qty</th>
-              <th>Unit</th>
-              <th>Total</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cart.map((line) => (
-              <tr key={line.productId}>
-                <td>
-                  {line.sku} - {line.nameAr}
-                </td>
-                <td>{line.barcode}</td>
-                <td>
-                  <input
-                    type="number"
-                    min={1}
-                    value={line.quantity}
-                    onChange={(event) => updateQuantity(line.productId, Number(event.target.value))}
-                    style={{ width: 84 }}
-                  />
-                </td>
-                <td>{line.unitPrice.toFixed(2)}</td>
-                <td>{(line.quantity * line.unitPrice).toFixed(2)}</td>
-                <td>
-                  <button className="ghost-btn" type="button" onClick={() => removeLine(line.productId)}>
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="panel">
+        <form onSubmit={addFromSelect} className="form-grid form-grid-4" style={{ gap: '12px' }}>
+          <label style={{ display: 'grid', gap: '6px' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Product</span>
+            <select name="productId" required defaultValue="">
+              <option value="" disabled>
+                Select product
+              </option>
+              {products.map((product) => (
+                <option key={product.id} value={product.id}>
+                  {product.sku} - {product.nameAr}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label style={{ display: 'grid', gap: '6px' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Quantity</span>
+            <input name="quantity" type="number" placeholder="1" min={1} defaultValue={1} required />
+          </label>
+          <div></div>
+          <button className="primary-btn" type="submit">
+            Add Line
+          </button>
+        </form>
       </div>
 
-      <div className="form-grid form-grid-3" style={{ marginTop: 12, alignItems: "center" }}>
-        <select value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value)}>
-          <option value="CASH">Cash</option>
-          <option value="CARD">Card</option>
-          <option value="TRANSFER">Transfer</option>
-          <option value="MIXED">Mixed</option>
-        </select>
-        <strong>Cart Total: {cartTotal.toFixed(2)}</strong>
-        <button className="primary-btn" type="button" onClick={() => void createSale()}>
-          Create Sale
-        </button>
-      </div>
-
-      <div className="table-wrap" style={{ marginTop: 14 }}>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Reference</th>
-              <th>Cashier</th>
-              <th>Payment</th>
-              <th>Total</th>
-              <th>Paid</th>
-              <th>Print</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => {
-              const invoice = row.invoice;
-              return (
-                <tr key={row.id}>
-                  <td>{new Date(row.createdAt).toLocaleString()}</td>
-                  <td>{row.reference}</td>
-                  <td>{row.cashier.fullName}</td>
-                  <td>{row.paymentMethod}</td>
-                  <td>{row.total.toFixed(2)}</td>
-                  <td>{row.paidAmount.toFixed(2)}</td>
-                  <td>
-                    {invoice ? (
-                      <button className="ghost-btn" type="button" onClick={() => void openPdf(invoice.id, invoice.number)}>
-                        Print PDF
-                      </button>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
+      {cart.length > 0 && (
+        <div className="panel">
+          <h3 style={{ margin: '0 0 16px', fontSize: '1.1rem', fontWeight: '600', color: 'var(--fg)' }}>Cart ({cart.length} items)</h3>
+          <div className="table-wrap">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Barcode</th>
+                  <th>Qty</th>
+                  <th>Unit Price</th>
+                  <th>Total</th>
+                  <th>Action</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {cart.map((line) => (
+                  <tr key={line.productId}>
+                    <td><strong>{line.sku}</strong><br/><span style={{ fontSize: '0.85rem', color: 'var(--fg-muted)' }}>{line.nameAr}</span></td>
+                    <td style={{ fontSize: '0.9rem', fontFamily: 'monospace' }}>{line.barcode}</td>
+                    <td>
+                      <input
+                        type="number"
+                        min={1}
+                        value={line.quantity}
+                        onChange={(event) => updateQuantity(line.productId, Number(event.target.value))}
+                        style={{ width: 70, padding: '8px', borderRadius: '8px', border: '1px solid var(--line)' }}
+                      />
+                    </td>
+                    <td>${line.unitPrice.toFixed(2)}</td>
+                    <td><strong>${(line.quantity * line.unitPrice).toFixed(2)}</strong></td>
+                    <td>
+                      <button className="ghost-btn" type="button" style={{ padding: '8px 12px', fontSize: '0.9rem' }} onClick={() => removeLine(line.productId)}>
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-      {status ? <p>{status}</p> : null}
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginTop: '20px', padding: '16px', background: 'rgba(59, 130, 246, 0.05)', borderRadius: '12px' }}>
+            <label style={{ display: 'grid', gap: '6px', flex: 1 }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--fg)' }}>Payment Method</span>
+              <select value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value)} style={{ padding: '10px 12px', border: '1.5px solid var(--line)', borderRadius: '10px', background: 'var(--bg-soft)', color: 'var(--fg)' }}>
+                <option value="CASH">Cash</option>
+                <option value="CARD">Card</option>
+                <option value="TRANSFER">Transfer</option>
+                <option value="MIXED">Mixed</option>
+              </select>
+            </label>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{ margin: '0 0 8px', color: 'var(--fg-muted)', fontSize: '0.9rem' }}>Cart Total</p>
+              <div style={{ fontSize: '1.75rem', fontWeight: '700', color: 'var(--primary)' }}>${cartTotal.toFixed(2)}</div>
+            </div>
+            <button className="primary-btn" type="button" style={{ alignSelf: 'flex-end', whiteSpace: 'nowrap' }} onClick={() => void createSale()}>
+              Create Sale
+            </button>
+          </div>
+        </div>
+      )}
+
+      {status && (
+        <div style={{ padding: '12px 16px', background: status.includes('created') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', borderRadius: '10px', color: status.includes('created') ? 'var(--success)' : 'var(--error)', fontWeight: '500', fontSize: '0.9rem' }}>
+          {status}
+        </div>
+      )}
+
+      {rows.length > 0 && (
+        <div className="panel">
+          <h3 style={{ margin: '0 0 16px', fontSize: '1.1rem', fontWeight: '600', color: 'var(--fg)' }}>Recent Sales</h3>
+          <div className="table-wrap">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Reference</th>
+                  <th>Cashier</th>
+                  <th>Payment</th>
+                  <th>Total</th>
+                  <th>Paid</th>
+                  <th>Invoice</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row) => {
+                  const invoice = row.invoice;
+                  return (
+                    <tr key={row.id}>
+                      <td>{new Date(row.createdAt).toLocaleDateString()}</td>
+                      <td><strong>{row.reference}</strong></td>
+                      <td>{row.cashier.fullName}</td>
+                      <td><span style={{ padding: '4px 8px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '6px', fontSize: '0.9rem', fontWeight: '500', color: 'var(--primary)' }}>{row.paymentMethod}</span></td>
+                      <td>${row.total.toFixed(2)}</td>
+                      <td style={{ color: row.paidAmount >= row.total ? 'var(--success)' : 'var(--warning)' }}>${row.paidAmount.toFixed(2)}</td>
+                      <td>
+                        {invoice ? (
+                          <button className="ghost-btn" type="button" style={{ padding: '8px 12px', fontSize: '0.9rem' }} onClick={() => void openPdf(invoice.id, invoice.number)}>
+                            View PDF
+                          </button>
+                        ) : (
+                          <span style={{ color: 'var(--fg-muted)', fontSize: '0.9rem' }}>-</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -99,16 +99,27 @@ export default function ProductsPage() {
   }
 
   return (
-    <section>
-      <h2 className="page-title">{dictionary.products.title}</h2>
-      <div className="inline-actions">
-        <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={dictionary.common.search} />
+    <section className="page-section">
+      <div className="section-header">
+        <div>
+          <h2 className="page-title">{dictionary.products.title}</h2>
+          <p className="page-subtitle">{dictionary.products.subtitle || 'Manage your product inventory'}</p>
+        </div>
         <Link href="/products/create" className="primary-btn">
           {dictionary.products.create}
         </Link>
       </div>
 
       <article className="panel">
+        <div style={{ marginBottom: '20px' }}>
+          <input 
+            value={search} 
+            onChange={(event) => setSearch(event.target.value)} 
+            placeholder={dictionary.common.search}
+            style={{ width: '100%', maxWidth: '400px' }}
+          />
+        </div>
+
         <div className="table-wrap">
           <table className="data-table">
             <thead>
@@ -124,27 +135,41 @@ export default function ProductsPage() {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6}>{dictionary.common.loading}</td>
+                  <td colSpan={6} style={{ textAlign: 'center', padding: '32px 12px', color: 'var(--fg-muted)' }}>
+                    {dictionary.common.loading}
+                  </td>
                 </tr>
               ) : (
-                filtered.map((row) => (
-                  <tr key={row.id}>
-                    <td>{row.sku}</td>
+                filtered.map((row, index) => (
+                  <tr key={row.id} style={{ '--row-delay': `${index * 0.03}s` } as React.CSSProperties}>
+                    <td><strong style={{ color: 'var(--primary)' }}>{row.sku}</strong></td>
                     <td>{row.barcode}</td>
-                    <td>
-                      {row.nameFr} / {row.nameAr}
+                    <td style={{ maxWidth: '200px' }}>
+                      <div>{row.nameFr}</div>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--fg-muted)', marginTop: '4px' }}>{row.nameAr}</div>
                     </td>
-                    <td>{row.stockQty}</td>
-                    <td>{row.salePrice.toFixed(2)}</td>
                     <td>
-                      <div className="inline-actions" style={{ margin: 0 }}>
-                        <Link href={`/products/${row.id}`} className="ghost-btn">
+                      <span style={{ 
+                        background: row.stockQty > 10 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                        color: row.stockQty > 10 ? 'var(--success)' : 'var(--error)',
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        fontSize: '0.9rem',
+                        fontWeight: '600'
+                      }}>
+                        {row.stockQty}
+                      </span>
+                    </td>
+                    <td><strong>${row.salePrice.toFixed(2)}</strong></td>
+                    <td>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                        <Link href={`/products/${row.id}`} className="ghost-btn" style={{ padding: '8px 12px', fontSize: '0.9rem' }}>
                           Voir
                         </Link>
-                        <button className="ghost-btn" type="button" onClick={() => void viewLabelPdf(row.id)}>
-                          Etiquette PDF
+                        <button className="ghost-btn" type="button" style={{ padding: '8px 12px', fontSize: '0.9rem' }} onClick={() => void viewLabelPdf(row.id)}>
+                          PDF
                         </button>
-                        <button className="primary-btn" type="button" onClick={() => void printLabelPdf(row.id)}>
+                        <button className="primary-btn" type="button" style={{ padding: '8px 12px', fontSize: '0.9rem' }} onClick={() => void printLabelPdf(row.id)}>
                           Imprimer
                         </button>
                       </div>
@@ -156,7 +181,7 @@ export default function ProductsPage() {
           </table>
         </div>
       </article>
-      {status ? <p>{status}</p> : null}
+      {status ? <p style={{ color: 'var(--error)', marginTop: '16px', fontWeight: '500' }}>{status}</p> : null}
     </section>
   );
 }

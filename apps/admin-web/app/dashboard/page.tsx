@@ -59,13 +59,17 @@ export default function DashboardPage() {
   );
 
   return (
-    <section>
-      <h2 className="page-title">{dictionary.dashboard.title}</h2>
-      <p className="page-subtitle">{dictionary.dashboard.subtitle}</p>
+    <section className="page-section">
+      <div className="section-header">
+        <div>
+          <h2 className="page-title">{dictionary.dashboard.title}</h2>
+          <p className="page-subtitle">{dictionary.dashboard.subtitle}</p>
+        </div>
+      </div>
 
       <div className="grid-cards">
-        {cards.map((card) => (
-          <article key={card.label} className="card">
+        {cards.map((card, index) => (
+          <article key={card.label} className="card" style={{ '--card-delay': `${index * 0.1}s` } as React.CSSProperties}>
             <h3>{card.label}</h3>
             <strong>{card.value}</strong>
           </article>

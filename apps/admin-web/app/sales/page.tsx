@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import CameraScanner from "../../components/barcode-scanner/camera-scanner";
 import UsbScanner from "../../components/barcode-scanner/usb-scanner";
+import { MobileNav } from "../../components/layout/mobile-nav";
 import { apiClient } from "../../lib/api-client";
 import { getToken } from "../../lib/auth";
 
@@ -348,6 +349,12 @@ export default function SalesPage() {
           </div>
         </div>
       )}
+
+      {/* Mobile Navigation Section */}
+      <div className="mobile-nav-section">
+        <h3 style={{ margin: '0 0 16px', fontSize: '1rem', fontWeight: '600', color: 'var(--fg)' }}>Quick Access</h3>
+        <MobileNav />
+      </div>
     </section>
   );
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { MobileNav } from "../../components/layout/mobile-nav";
 import { apiClient } from "../../lib/api-client";
 import { getToken } from "../../lib/auth";
 import { useI18n } from "../../hooks/use-i18n";
@@ -182,6 +183,12 @@ export default function ProductsPage() {
         </div>
       </article>
       {status ? <p style={{ color: 'var(--error)', marginTop: '16px', fontWeight: '500' }}>{status}</p> : null}
+
+      {/* Mobile Navigation Section */}
+      <div className="mobile-nav-section">
+        <h3 style={{ margin: '0 0 16px', fontSize: '1rem', fontWeight: '600', color: 'var(--fg)' }}>Quick Access</h3>
+        <MobileNav />
+      </div>
     </section>
   );
 }

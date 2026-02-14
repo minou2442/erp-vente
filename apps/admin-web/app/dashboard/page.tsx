@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Analytics from "./analytics";
+import { MobileNav } from "../../components/layout/mobile-nav";
 import { apiClient } from "../../lib/api-client";
 import { useI18n } from "../../hooks/use-i18n";
 import { formatMoney } from "../../lib/utils";
@@ -58,6 +59,10 @@ export default function DashboardPage() {
     [data, dictionary]
   );
 
+  const badges = useMemo(() => ({
+    stock: data.lowStockCount > 0 ? data.lowStockCount : undefined,
+  }), [data.lowStockCount]);
+
   return (
     <section className="page-section">
       <div className="section-header">
@@ -77,6 +82,12 @@ export default function DashboardPage() {
       </div>
 
       <Analytics points={data.salesByDay} />
+
+      {/* Mobile Navigation Section */}
+      <div className="mobile-nav-section">
+        <h3 style={{ margin: '0 0 16px', fontSize: '1rem', fontWeight: '600', color: 'var(--fg)' }}>Quick Access</h3>
+        <MobileNav badges={badges} />
+      </div>
     </section>
   );
 }
